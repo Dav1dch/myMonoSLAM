@@ -1,21 +1,24 @@
+#include "opencv2/calib3d.hpp"
 #include "opencv2/opencv.hpp"
+#include <Eigen/Core>
+#include <Eigen/Dense>
 #include <iostream>
-#include <opencv2/opencv.hpp>
-
-using namespace std;
-using namespace cv;
 
 namespace fe_extract {
 class feature_extractor {
   public:
-    Mat last, descriptors_;
-    vector<Point2f> corners_;
-    vector<KeyPoint> kps_;
-    vector<DMatch> matches;
-    Ptr<DescriptorMatcher> matcher;
+    cv::Mat last, descriptors_;
+    std::vector<cv::Point2f> corners_;
+    std::vector<cv::KeyPoint> kps_;
+    std::vector<cv::DMatch> matches;
+    cv::Ptr<cv::DescriptorMatcher> matcher;
     bool isInitialized;
     feature_extractor();
-    void extract(Mat frame, vector<Point2f> &corners, Mat descriptors);
+    void extract(cv::Mat frame, std::vector<cv::Point2f> &corners,
+                 cv::Mat descriptors);
 };
+
+cv::Mat pt_normalize(std::vector<cv::Point2f> pts);
+cv::Mat pt_denormalize(std::vector<cv::Point2f> pts);
 
 } // namespace fe_extract

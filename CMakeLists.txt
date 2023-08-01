@@ -3,8 +3,7 @@ cmake_minimum_required(VERSION 3.23)
 project(monoSLAM)
 
 include_directories("/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3/",
-	"./include",
-	"./src"
+	"./include"
 	)
 
 set(CMAKE_BUILD_TYPE Release)
@@ -43,4 +42,4 @@ include_directories(${G2O_INCLUDE_DIRS})
 
 
 add_executable(slam src/slam.cc src/extract.cc)
-target_link_libraries(slam ${OpenCV_LIBS} ${CERES_LIBRARIES})
+target_link_libraries(slam ${OpenCV_LIBS})

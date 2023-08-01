@@ -1,5 +1,4 @@
 #include "slam.h"
-#include "extract.h"
 
 fe_extract::feature_extractor extractor;
 
@@ -14,7 +13,8 @@ void process_frame(Mat frame) {
 
 int main(int argc, char **argv) {
 
-    VideoCapture cap("/Users/david/Codes/myMonoSLAM/test.mp4");
+    // VideoCapture cap("/Users/david/Codes/myMonoSLAM/test.mp4");
+    VideoCapture cap("/Users/david/Downloads/sfm_lab_room_1/rgb/img_%05d.png");
     // Check if camera opened successfully
     if (!cap.isOpened()) {
         cout << "Error opening video stream or file" << endl;
