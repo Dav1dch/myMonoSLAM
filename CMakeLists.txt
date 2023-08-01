@@ -41,5 +41,6 @@ include_directories(${G2O_INCLUDE_DIRS})
 # target_link_libraries(orb_cv ${OpenCV_LIBS})
 
 
-add_executable(slam src/slam.cc src/extract.cc)
+add_executable(slam src/slam.cc src/extract.cc src/frame.cc src/tools.cc
+	src/match.cc)
 target_link_libraries(slam ${OpenCV_LIBS})

@@ -1,5 +1,10 @@
+#ifndef EXTRACT_H
+#define EXTRACT_H
+
 #include "opencv2/calib3d.hpp"
 #include "opencv2/opencv.hpp"
+#include "tools.h"
+#include "type.h"
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <iostream>
@@ -11,14 +16,13 @@ class feature_extractor {
     std::vector<cv::Point2f> corners_;
     std::vector<cv::KeyPoint> kps_;
     std::vector<cv::DMatch> matches;
+    cv::Ptr<cv::ORB> detector;
     cv::Ptr<cv::DescriptorMatcher> matcher;
     bool isInitialized;
     feature_extractor();
-    void extract(cv::Mat frame, std::vector<cv::Point2f> &corners,
-                 cv::Mat descriptors);
+    void extract(cv::Mat frame, frame_ *f);
 };
 
-cv::Mat pt_normalize(std::vector<cv::Point2f> pts);
-cv::Mat pt_denormalize(std::vector<cv::Point2f> pts);
-
 } // namespace fe_extract
+
+#endif

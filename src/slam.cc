@@ -1,18 +1,19 @@
 #include "slam.h"
 
-fe_extract::feature_extractor extractor;
+// fe_extract::feature_extractor extractor;
 
-void process_frame(Mat frame) {
-    Mat frame_;
-    // cv::resize(frame, frame_, Size(540, 480));
-    vector<Point2f> corners;
-    Mat descriptors;
-    extractor.extract(frame, corners, descriptors);
-    // cout << corners.size() << endl;
-}
+// void process_frame(Mat frame) {
+// Mat frame_;
+// // cv::resize(frame, frame_, Size(540, 480));
+// vector<Point2f> corners;
+// Mat descriptors;
+// extractor.extract(frame, corners, descriptors);
+// // cout << corners.size() << endl;
+// }
 
 int main(int argc, char **argv) {
 
+    frame::frame *f = new frame::frame();
     // VideoCapture cap("/Users/david/Codes/myMonoSLAM/test.mp4");
     VideoCapture cap("/Users/david/Downloads/sfm_lab_room_1/rgb/img_%05d.png");
     // Check if camera opened successfully
@@ -32,7 +33,8 @@ int main(int argc, char **argv) {
             break;
 
         // Display the resulting frame
-        process_frame(frame);
+
+        f->process_frame(frame);
 
         // Press  ESC on keyboard to exit
         char c = (char)waitKey(25);
