@@ -3,6 +3,7 @@
 
 #include "opencv2/calib3d.hpp"
 #include "opencv2/core.hpp"
+#include "tools.h"
 #include "type.h"
 
 namespace fe_matcher {
@@ -13,6 +14,7 @@ class feature_matcher {
     std::vector<cv::DMatch> matches;
     feature_matcher();
     void match_frames(frame_ *f1, frame_ *f2);
+    float width, height, tresholdDist;
 };
 } // namespace fe_matcher
 
