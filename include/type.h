@@ -15,13 +15,22 @@ struct frame_ {
     std::vector<cv::KeyPoint> kps_all;
     std::vector<cv::Point2f> points1, points2;
     Sophus::SE3f T;
-    frame_() : R(cv::Mat::eye(3, 3, CV_64F)), t(cv::Mat::zeros(3, 1, CV_64F)) {
+    int idx;
+    frame_()
+        : R(cv::Mat::eye(3, 3, CV_64F)), t(cv::Mat::zeros(3, 1, CV_64F)),
+          idx(0) {
         Eigen::Matrix3f Rotation;
         Eigen::Vector3f Translation;
         cv::cv2eigen(R, Rotation);
         cv::cv2eigen(t, Translation);
         T = Sophus::SE3f(Rotation, Translation);
     }
+};
+
+struct Point {
+    std::vector<int> frames;
+    cv::Mat pose;
+    std::vector<int> idxs;
 };
 
 #endif

@@ -18,6 +18,7 @@ namespace frame {
 class frame {
   public:
     std::vector<frame_ *> frames;
+    std::vector<Point> points;
     bool isInitialized;
     std::vector<std::vector<float>> posees;
     int idx;

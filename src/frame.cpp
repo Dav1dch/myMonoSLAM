@@ -1,5 +1,9 @@
 #include "frame.h"
 #include <Eigen/src/Core/ArithmeticSequence.h>
+#include <pangolin/display/display.h>
+#include <pangolin/display/view.h>
+#include <pangolin/gl/gldraw.h>
+#include <pangolin/handler/handler.h>
 
 namespace frame {
 frame::frame() {
@@ -12,6 +16,7 @@ void frame::process_frame_orb(cv::Mat image_f) {
     // cv::resize(frame, frame_, Size(540, 480));
 
     frame_ *cur_frame = new frame_();
+    cur_frame->idx = this->frames.size();
 
     this->extractor.extract(image_f, cur_frame);
     this->frames.push_back(cur_frame);
@@ -66,7 +71,13 @@ void frame::process_frame_orb(cv::Mat image_f) {
         pts4dt = pts4d.t();
         for (auto i = 0; i < pts4dt.rows; ++i) {
             pts4dt.row(i) = pts4dt.row(i) / pts4dt.at<float>(i, 3);
-            std::cout << pts4dt.row(i) << std::endl;
+            Point pt;
+            pt.frames.push_back(this->frames.size() - 2);
+            pt.frames.push_back(this->frames.size() - 1);
+            pt.idxs.push_back(this->matcher.matches[i].trainIdx);
+            pt.idxs.push_back(this->matcher.matches[i].queryIdx);
+            pt.pose = pts4dt.row(i);
+            this->points.push_back(pt);
         }
 
         cv::drawMatches(draw, cur_f->kps_all, draw_l, last_f->kps_all,
