@@ -25,7 +25,8 @@ class frame {
     fe_extract::feature_extractor extractor;
     fe_matcher::feature_matcher matcher;
 
-    void process_frame(cv::Mat frame);
+    void process_frame_orb(cv::Mat frame);
+    void process_frame_direct(cv::Mat frame);
     void extractRt(frame_ *f1, frame_ *f2);
     frame();
 };

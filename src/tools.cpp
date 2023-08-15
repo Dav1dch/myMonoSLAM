@@ -4,7 +4,7 @@
 cv::Mat pts_normalize(std::vector<cv::Point2f> pts) {
     Eigen::Vector3f vec;
     Eigen::Matrix<float, 3, 3> K, K_inv;
-    K << 360.0, 0.0, 640.0, 0.0, 360.0, 360.0, 0.0, 0.0, 1.0;
+    K << 726.21081542969, 726.21081542969, 359.2048034668, 202.47247314453;
     K_inv = K.inverse();
     std::vector<float> res_vec;
 

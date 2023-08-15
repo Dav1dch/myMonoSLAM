@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 
         // Display the resulting frame
 
-        f->process_frame(frame);
+        f->process_frame_orb(frame);
 
         // Press  ESC on keyboard to exit
         char c = (char)waitKey(25);

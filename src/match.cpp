@@ -56,8 +56,8 @@ void feature_matcher::match_frames(frame_ *f1, frame_ *f2) {
     this->matches = std::vector<cv::DMatch>(good_matches);
     std::cout << this->matches.size() << std::endl;
     for (auto i = 0; i < this->matches.size(); i++) {
-        f2->points1.push_back(f2->kps_all[this->matches[i].queryIdx].pt);
         f1->points2.push_back(f1->kps_all[this->matches[i].trainIdx].pt);
+        f2->points1.push_back(f2->kps_all[this->matches[i].queryIdx].pt);
     }
 }
 

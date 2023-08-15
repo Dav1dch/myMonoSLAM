@@ -1,4 +1,5 @@
 #include "frame.h"
+#include <Eigen/src/Core/ArithmeticSequence.h>
 
 namespace frame {
 frame::frame() {
@@ -6,7 +7,7 @@ frame::frame() {
     this->idx = 0;
 }
 
-void frame::process_frame(cv::Mat image_f) {
+void frame::process_frame_orb(cv::Mat image_f) {
     // cv::Mat frame_;
     // cv::resize(frame, frame_, Size(540, 480));
 
@@ -49,16 +50,13 @@ void frame::process_frame(cv::Mat image_f) {
                  last_f->kps_all[m.trainIdx].pt, {255, 0, 0}, 4);
         }
 
-        cv::drawMatches(draw, cur_f->kps_all, draw_l, last_f->kps_all,
-                        this->matcher.matches, twin);
-        cv::imshow("Frame", twin);
-        // cv::waitKey(0);
-
         this->extractRt(cur_f, last_f);
 
         cv::Mat pts4d, pts4dt;
         cv::Mat projMatr1, projMatr2;
 
+        // cv::hconcat(last_f->T.rotationMatrix(), last_f->T.translation(),
+        //             projMatr1);
         cv::hconcat(last_f->R, last_f->t, projMatr1);
         cv::hconcat(cur_f->R, cur_f->t, projMatr2);
 
@@ -68,7 +66,13 @@ void frame::process_frame(cv::Mat image_f) {
         pts4dt = pts4d.t();
         for (auto i = 0; i < pts4dt.rows; ++i) {
             pts4dt.row(i) = pts4dt.row(i) / pts4dt.at<float>(i, 3);
+            std::cout << pts4dt.row(i) << std::endl;
         }
+
+        cv::drawMatches(draw, cur_f->kps_all, draw_l, last_f->kps_all,
+                        this->matcher.matches, twin);
+        cv::imshow("Frame", twin);
+        // cv::waitKey(0);
 
         // cv::Mat pose;
         // cv::hconcat(r, t, pose);
@@ -84,6 +88,8 @@ void frame::extractRt(frame_ *cur_f, frame_ *last_f) {
                     matcher.K, r, t);
     cv::cv2eigen(r, Rotation);
     cv::cv2eigen(t, Translation);
+    cur_f->R = r;
+    cur_f->t = t;
 
     Sophus::SE3f T(Rotation, Translation);
 
@@ -92,8 +98,11 @@ void frame::extractRt(frame_ *cur_f, frame_ *last_f) {
     cur_f->T = T;
     Eigen::Quaternionf q(T.rotationMatrix());
     Eigen::Vector3f tr = T.translation();
+    // cv::eigen2cv(T.matrix3x4()(Eigen::all, Eigen::seq(0, 2)), cur_f->R);
+    // cv::eigen2cv(T.matrix3x4()(Eigen::all, Eigen::seq(3, 3)), cur_f->t);
 
-    std::cout << "T rotation" << std::endl
+    std::cout << T.matrix() << std::endl
+              << "T rotation" << std::endl
               << q << std::endl
               << "T Translation: " << std::endl
               << T.translation() << std::endl;
