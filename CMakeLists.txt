@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.23)
 
+# Find Pangolin (https://github.com/stevenlovegrove/Pangolin)
+
+
 project(monoSLAM)
 
 include_directories("/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3/",
@@ -13,6 +16,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(G2O_ROOT /opt/homebrew/Cellar/g2o/20230223/include/g2o)
 
 list(APPEND CMAKE_MODULE_PATH /Users/david/Codes/Apps/g2o/cmake_modules/)
+
+# Pangolin
+find_package(Pangolin 0.8 REQUIRED)
+include_directories(${Pangolin_INCLUDE_DIRS})
 
 # OpenCV
 find_package(OpenCV REQUIRED)
@@ -49,4 +56,5 @@ include_directories(${Sophus_INCLUDE_DIRS})
 
 add_executable(slam src/slam.cpp src/extract.cpp src/frame.cpp src/tools.cpp
 	src/match.cpp)
-target_link_libraries(slam ${OpenCV_LIBS} ${Sophus_LIBRARIES} fmt::fmt)
+target_link_libraries(slam ${OpenCV_LIBS} ${Sophus_LIBRARIES} fmt::fmt ${Pangolin_LIBRARIES})
+add_executable(test test/main.cpp)
