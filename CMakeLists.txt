@@ -5,17 +5,25 @@ cmake_minimum_required(VERSION 3.23)
 
 project(monoSLAM)
 
-include_directories("/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3/",
+include_directories("/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3/"
 	"./include"
 	)
 
-set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_CXX_FLAGS "-std=c++17 -O3")
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_BUILD_TYPE debug)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -O3")
+# set(CMAKE_BUILD_TYPE Release)
+# set(CMAKE_CXX_FLAGS "-std=c++17 -O3")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # project(LeastSquareProblem)
 # set(G2O_ROOT /opt/homebrew/Cellar/g2o/20230223/include/g2o)
 
 list(APPEND CMAKE_MODULE_PATH /Users/david/Codes/Apps/g2o/cmake_modules/)
+
+#Threads
+find_package(Threads QUIET)
+
 
 # Pangolin
 find_package(Pangolin 0.8 REQUIRED)
@@ -32,6 +40,7 @@ include_directories(${CERES_INCLUDE_DIRS})
 # g2o
 find_package(G2O REQUIRED)
 include_directories(${G2O_INCLUDE_DIRS})
+
 
 
 #sophus
@@ -55,6 +64,7 @@ include_directories(${Sophus_INCLUDE_DIRS})
 
 
 add_executable(slam src/slam.cpp src/extract.cpp src/frame.cpp src/tools.cpp
-	src/match.cpp)
+	src/match.cpp src/render.cpp)
 target_link_libraries(slam ${OpenCV_LIBS} ${Sophus_LIBRARIES} fmt::fmt ${Pangolin_LIBRARIES})
-add_executable(test test/main.cpp)
+add_executable(test test/main.cpp src/tools.cpp)
+target_link_libraries(test ${Pangolin_LIBRARIES} Threads::Threads)

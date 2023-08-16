@@ -1,21 +1,15 @@
 #include "slam.h"
 
-// fe_extract::feature_extractor extractor;
-
-// void process_frame(Mat frame) {
-// Mat frame_;
-// // cv::resize(frame, frame_, Size(540, 480));
-// vector<Point2f> corners;
-// Mat descriptors;
-// extractor.extract(frame, corners, descriptors);
-// // cout << corners.size() << endl;
-// }
-
 int main(int argc, char **argv) {
 
+    viewer *v = new viewer();
+    v->setup();
+    auto co = v->run();
+    v->co = &co;
     frame::frame *f = new frame::frame();
-    // VideoCapture cap("/Users/david/Codes/myMonoSLAM/test.mp4");
-    VideoCapture cap("/Users/david/Downloads/sfm_lab_room_1/rgb/img_%05d.png");
+    VideoCapture cap("/Users/david/Codes/myMonoSLAM/test.mp4");
+    // VideoCapture
+    // cap("/Users/david/Downloads/sfm_lab_room_1/rgb/img_%05d.png");
     if (!cap.isOpened()) {
         cout << "Error opening video stream or file" << endl;
         return -1;
@@ -33,7 +27,7 @@ int main(int argc, char **argv) {
 
         // Display the resulting frame
 
-        f->process_frame_orb(frame);
+        f->process_frame_orb(frame, v);
 
         // Press  ESC on keyboard to exit
         char c = (char)waitKey(25);

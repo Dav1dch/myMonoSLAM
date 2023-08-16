@@ -1,9 +1,4 @@
 #include "frame.h"
-#include <Eigen/src/Core/ArithmeticSequence.h>
-#include <pangolin/display/display.h>
-#include <pangolin/display/view.h>
-#include <pangolin/gl/gldraw.h>
-#include <pangolin/handler/handler.h>
 
 namespace frame {
 frame::frame() {
@@ -11,7 +6,7 @@ frame::frame() {
     this->idx = 0;
 }
 
-void frame::process_frame_orb(cv::Mat image_f) {
+void frame::process_frame_orb(cv::Mat image_f, viewer *v) {
     // cv::Mat frame_;
     // cv::resize(frame, frame_, Size(540, 480));
 
@@ -20,7 +15,8 @@ void frame::process_frame_orb(cv::Mat image_f) {
 
     this->extractor.extract(image_f, cur_frame);
     this->frames.push_back(cur_frame);
-    std::cout << cur_frame->corners.size() << std::endl;
+    std::cout << "cur_frame corners.size" << cur_frame->corners.size()
+              << std::endl;
     int cur = this->frames.size();
     if (cur == 1) {
         this->isInitialized = true;
@@ -33,7 +29,7 @@ void frame::process_frame_orb(cv::Mat image_f) {
         } // for loop
 
         cv::imshow("Frame", draw);
-        cv::waitKey(0);
+        // cv::waitKey(0);
         this->isInitialized = true;
     } else {
         this->matcher.match_frames(this->frames[cur - 2],
@@ -68,6 +64,8 @@ void frame::process_frame_orb(cv::Mat image_f) {
         cv::triangulatePoints(projMatr1, projMatr2, last_f->points2,
                               cur_f->points1, pts4d);
 
+        renderFrame rf;
+        rf.f = cur_f;
         pts4dt = pts4d.t();
         for (auto i = 0; i < pts4dt.rows; ++i) {
             pts4dt.row(i) = pts4dt.row(i) / pts4dt.at<float>(i, 3);
@@ -78,10 +76,13 @@ void frame::process_frame_orb(cv::Mat image_f) {
             pt.idxs.push_back(this->matcher.matches[i].queryIdx);
             pt.pose = pts4dt.row(i);
             this->points.push_back(pt);
+            rf.points.push_back(pt);
         }
+        v->renderQueue.put(rf);
 
         cv::drawMatches(draw, cur_f->kps_all, draw_l, last_f->kps_all,
                         this->matcher.matches, twin);
+        v->co->resume();
         cv::imshow("Frame", twin);
         // cv::waitKey(0);
 
@@ -111,12 +112,14 @@ void frame::extractRt(frame_ *cur_f, frame_ *last_f) {
     Eigen::Vector3f tr = T.translation();
     // cv::eigen2cv(T.matrix3x4()(Eigen::all, Eigen::seq(0, 2)), cur_f->R);
     // cv::eigen2cv(T.matrix3x4()(Eigen::all, Eigen::seq(3, 3)), cur_f->t);
+    cv::eigen2cv(T.translation(), cur_f->t);
+    cv::eigen2cv(T.rotationMatrix(), cur_f->R);
 
-    std::cout << T.matrix() << std::endl
-              << "T rotation" << std::endl
-              << q << std::endl
-              << "T Translation: " << std::endl
-              << T.translation() << std::endl;
+    // std::cout << T.matrix() << std::endl
+    //           << "T rotation" << std::endl
+    //           << q << std::endl
+    //           << "T Translation: " << std::endl
+    //           << T.translation() << std::endl;
     this->posees.push_back({float(this->idx++), tr.x(), tr.y(), tr.z(), q.x(),
                             q.y(), q.z(), q.w()});
 

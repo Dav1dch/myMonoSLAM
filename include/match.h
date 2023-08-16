@@ -5,6 +5,8 @@
 #include "opencv2/core.hpp"
 #include "tools.h"
 #include "type.h"
+#include <iostream>
+#include <set>
 
 namespace fe_matcher {
 class feature_matcher {
@@ -19,3 +21,5 @@ class feature_matcher {
 } // namespace fe_matcher
 
 #endif
+
+cv::Mat pts_normalize(std::vector<cv::Point2f> pts);

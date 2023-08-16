@@ -33,4 +33,9 @@ struct Point {
     std::vector<int> idxs;
 };
 
+struct renderFrame {
+    frame_ *f;
+    std::vector<Point> points;
+};
+
 #endif
