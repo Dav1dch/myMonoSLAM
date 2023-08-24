@@ -126,4 +126,6 @@ struct MyCoroutine {
     }
 };
 
+Eigen::Matrix4f Homogeneous_matrix(Eigen::MatrixXf mat);
+
 #endif /* ifndef TOOLS_H */

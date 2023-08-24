@@ -13,11 +13,11 @@ struct frame_ {
     std::vector<cv::Point2f> corners;
     std::vector<cv::KeyPoint> kps;
     std::vector<cv::KeyPoint> kps_all;
-    std::vector<cv::Point2f> points1, points2;
+    std::vector<cv::Point2f> points1, points2, pts1, pts2;
     Sophus::SE3f T;
     int idx;
     frame_()
-        : R(cv::Mat::eye(3, 3, CV_64F)), t(cv::Mat::zeros(3, 1, CV_64F)),
+        : R(cv::Mat::eye(3, 3, CV_32F)), t(cv::Mat::zeros(3, 1, CV_32F)),
           idx(0) {
         Eigen::Matrix3f Rotation;
         Eigen::Vector3f Translation;

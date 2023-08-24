@@ -13,10 +13,11 @@
 class viewer {
   public:
     std::string window_name;
-    BlockingQueue<renderFrame> renderQueue;
+    std::vector<renderFrame> renderQueue;
     MyCoroutine *co;
 
     void setup();
+    void final();
     MyCoroutine run();
     viewer();
 };

@@ -7,16 +7,12 @@ frame::frame() {
 }
 
 void frame::process_frame_orb(cv::Mat image_f, viewer *v) {
-    // cv::Mat frame_;
-    // cv::resize(frame, frame_, Size(540, 480));
 
     frame_ *cur_frame = new frame_();
     cur_frame->idx = this->frames.size();
 
     this->extractor.extract(image_f, cur_frame);
     this->frames.push_back(cur_frame);
-    std::cout << "cur_frame corners.size" << cur_frame->corners.size()
-              << std::endl;
     int cur = this->frames.size();
     if (cur == 1) {
         this->isInitialized = true;
@@ -54,31 +50,61 @@ void frame::process_frame_orb(cv::Mat image_f, viewer *v) {
         this->extractRt(cur_f, last_f);
 
         cv::Mat pts4d, pts4dt;
-        cv::Mat projMatr1, projMatr2;
+        cv::Mat TMatr1, TMatr2, projMatr2, projMatr1;
 
-        // cv::hconcat(last_f->T.rotationMatrix(), last_f->T.translation(),
-        //             projMatr1);
-        cv::hconcat(last_f->R, last_f->t, projMatr1);
-        cv::hconcat(cur_f->R, cur_f->t, projMatr2);
+        // construct Transform matrix
+        cv::hconcat(last_f->R, last_f->t, TMatr1);
+        cv::hconcat(cur_f->R, cur_f->t, TMatr2);
 
-        cv::triangulatePoints(projMatr1, projMatr2, last_f->points2,
-                              cur_f->points1, pts4d);
-
+        // pass data to render by pangolin
         renderFrame rf;
+
         rf.f = cur_f;
+
+        // construct homo pose matrix
+        Eigen::MatrixXf pose1, pose2;
+        Eigen::Matrix4f pose1_homogenous, pose2_homogenous;
+        cv::cv2eigen(TMatr1, pose1);
+        cv::cv2eigen(TMatr2, pose2);
+
+        pose1_homogenous = Homogeneous_matrix(pose1);
+        pose2_homogenous = Homogeneous_matrix(pose2);
+
+        Eigen::MatrixXf K, T1, T2;
+        cv::cv2eigen(matcher.K, K);
+        T1 = K * pose1;
+        T2 = K * pose2;
+        cv::eigen2cv(Eigen::MatrixXf(T1.block<3, 4>(0, 0)), projMatr1);
+        cv::eigen2cv(Eigen::MatrixXf(T2.block<3, 4>(0, 0)), projMatr2);
+
+        cv::triangulatePoints(projMatr2, projMatr1, cur_f->pts1, last_f->pts2,
+                              pts4d);
         pts4dt = pts4d.t();
-        for (auto i = 0; i < pts4dt.rows; ++i) {
+
+        for (auto i = 0; i < pts4dt.rows; i++) {
             pts4dt.row(i) = pts4dt.row(i) / pts4dt.at<float>(i, 3);
+            // std::cout << pts4dt.row(i) << std::endl;
+            Eigen::Vector4f p;
+            cv::cv2eigen(pts4dt.row(i).t(), p);
+            Eigen::VectorXf pl1, pl2, points;
+            pl1 = pose1_homogenous * p;
+            pl2 = pose2_homogenous * p;
+
+            if (pl1(2) <= 0 || pl2(2) <= 0) {
+                continue;
+            }
+            // std::cout << pose.t() << std::endl;
             Point pt;
             pt.frames.push_back(this->frames.size() - 2);
             pt.frames.push_back(this->frames.size() - 1);
             pt.idxs.push_back(this->matcher.matches[i].trainIdx);
             pt.idxs.push_back(this->matcher.matches[i].queryIdx);
-            pt.pose = pts4dt.row(i);
+            pt.pose = pts4dt.row(i).t();
             this->points.push_back(pt);
             rf.points.push_back(pt);
         }
-        v->renderQueue.put(rf);
+        std::cout << rf.points.size() << std::endl;
+        v->renderQueue.push_back(rf);
 
         cv::drawMatches(draw, cur_f->kps_all, draw_l, last_f->kps_all,
                         this->matcher.matches, twin);
@@ -96,7 +122,7 @@ void frame::extractRt(frame_ *cur_f, frame_ *last_f) {
     Eigen::Matrix3f Rotation;
     Eigen::Vector3f Translation;
 
-    cv::recoverPose(cur_f->essential_matrix, last_f->points2, cur_f->points1,
+    cv::recoverPose(cur_f->essential_matrix, cur_f->pts1, last_f->pts2,
                     matcher.K, r, t);
     cv::cv2eigen(r, Rotation);
     cv::cv2eigen(t, Translation);
@@ -115,17 +141,18 @@ void frame::extractRt(frame_ *cur_f, frame_ *last_f) {
     cv::eigen2cv(T.translation(), cur_f->t);
     cv::eigen2cv(T.rotationMatrix(), cur_f->R);
 
-    // std::cout << T.matrix() << std::endl
-    //           << "T rotation" << std::endl
-    //           << q << std::endl
-    //           << "T Translation: " << std::endl
-    //           << T.translation() << std::endl;
+    std::cout << T.matrix()
+              << std::endl
+              // << "T rotation" << std::endl
+              // << q << std::endl
+              // << "T Translation: " << std::endl
+              << T.translation().transpose() << std::endl;
     this->posees.push_back({float(this->idx++), tr.x(), tr.y(), tr.z(), q.x(),
                             q.y(), q.z(), q.w()});
 
     // cv::Mat last_pose, cur_pose;
-    // cv::Mat zero_one = cv::Mat::zeros(1, 4, CV_64F);
-    // zero_one.at<double>(3) = 1.0;
+    // cv::Mat zero_one = cv::Mat::zeros(1, 4, CV_32F);
+    // zero_one.at<float>(3) = 1.0;
 
     // cv::hconcat(last_f->R, last_f->t, last_pose);
     // cv::vconcat(last_pose, zero_one, last_pose);

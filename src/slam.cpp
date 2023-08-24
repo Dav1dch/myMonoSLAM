@@ -7,9 +7,13 @@ int main(int argc, char **argv) {
     auto co = v->run();
     v->co = &co;
     frame::frame *f = new frame::frame();
-    VideoCapture cap("/Users/david/Codes/myMonoSLAM/test.mp4");
-    // VideoCapture
-    // cap("/Users/david/Downloads/sfm_lab_room_1/rgb/img_%05d.png");
+    // VideoCapture cap(
+    //     "/Users/david/Downloads/twitchslam/videos/test_countryroad.mp4");
+    // VideoCapture cap("/Users/david/Codes/myMonoSLAM/test.mp4");
+    VideoCapture cap(
+
+        "/Users/david/Downloads/rgbd_dataset_freiburg1_xyz/rgb/%03d.png");
+    // VideoCapture cap("/Users/david/Codes/slambook2/ch7/%01d.png");
     if (!cap.isOpened()) {
         cout << "Error opening video stream or file" << endl;
         return -1;
@@ -34,6 +38,7 @@ int main(int argc, char **argv) {
         if (c == 27)
             break;
     }
+    v->final();
 
     std::cout << f->posees.at(0).at(0) << std::endl;
 
