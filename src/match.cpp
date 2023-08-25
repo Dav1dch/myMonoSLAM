@@ -29,8 +29,6 @@ cv::Mat pts_normalize(std::vector<cv::Point2f> pts) {
     return res;
 }
 
-namespace fe_matcher {
-
 feature_matcher::feature_matcher() {
     // this->K = (cv::Mat_<float>(3, 3) << 726.21081542969, 0.0, 359.2048034668,
     //            0.0, 726.21081542969, 202.47247314453, 0.0, 0.0, 1.0);
@@ -44,7 +42,7 @@ feature_matcher::feature_matcher() {
     this->matches = std::vector<cv::DMatch>();
 }
 
-void feature_matcher::match_frames(frame_ *f1, frame_ *f2) {
+void feature_matcher::match_frames(Frame *f1, Frame *f2) {
 
     std::vector<std::vector<cv::DMatch>> matches;
     // this->matcher->knnMatch(f2->descriptors, f1->descriptors, this->matches,
@@ -120,5 +118,3 @@ void feature_matcher::match_frames(frame_ *f1, frame_ *f2) {
     }
     // std::cout << m1.row(this->matches[0].trainIdx) << std::endl;
 }
-
-} // namespace fe_matcher

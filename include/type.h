@@ -6,17 +6,21 @@
 
 #include "opencv2/core.hpp"
 #include "opencv2/core/eigen.hpp"
+#include "opencv2/flann.hpp"
 #include "sophus/se3.hpp"
 
-struct frame_ {
+class Frame {
+  public:
     cv::Mat image, descriptors, essential_matrix, R, t;
+    cv::flann::Index *kd;
     std::vector<cv::Point2f> corners;
     std::vector<cv::KeyPoint> kps;
     std::vector<cv::KeyPoint> kps_all;
     std::vector<cv::Point2f> points1, points2, pts1, pts2;
+    std::vector<int> point_idxs;
     Sophus::SE3f T;
     int idx;
-    frame_()
+    Frame()
         : R(cv::Mat::eye(3, 3, CV_32F)), t(cv::Mat::zeros(3, 1, CV_32F)),
           idx(0) {
         Eigen::Matrix3f Rotation;
@@ -27,14 +31,29 @@ struct frame_ {
     }
 };
 
-struct Point {
+class Point {
+  public:
     std::vector<int> frames;
-    cv::Mat pose;
     std::vector<int> idxs;
+    int idx;
+    cv::Mat pose;
+    Sophus::SE3f T;
+    void add_observation(int frame_idx, int kps_idx, Frame *f);
+    Point(){};
+};
+
+class PointMap {
+  public:
+    std::vector<Point *> points;
+    std::vector<Frame *> frames;
+    void add_frame(Frame *f);
+    void add_point(Point *p);
+    PointMap(){};
 };
 
 struct renderFrame {
-    frame_ *f;
+  public:
+    Frame *f;
     std::vector<Point> points;
 };
 

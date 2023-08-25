@@ -63,8 +63,9 @@ include_directories(${Sophus_INCLUDE_DIRS})
 # target_link_libraries(orb_cv ${OpenCV_LIBS})
 
 
-add_executable(slam src/slam.cpp src/extract.cpp src/frame.cpp src/tools.cpp
-	src/match.cpp src/render.cpp)
+add_executable(slam src/slam.cpp src/type.cpp src/extract.cpp src/process.cpp src/tools.cpp
+  src/match.cpp src/render.cpp)
 target_link_libraries(slam ${OpenCV_LIBS} ${Sophus_LIBRARIES} fmt::fmt ${Pangolin_LIBRARIES})
-add_executable(test test/main.cpp src/tools.cpp)
-target_link_libraries(test ${Pangolin_LIBRARIES} Threads::Threads)
+
+add_executable(test test/main.cpp src/tools.cpp src/type.cpp)
+target_link_libraries(test ${Pangolin_LIBRARIES} Threads::Threads ${OpenCV_LIBS})

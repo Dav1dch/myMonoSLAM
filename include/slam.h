@@ -1,8 +1,8 @@
 #ifndef SLAM_H
 #define SLAM_H
 
-#include "frame.h"
 #include "opencv2/opencv.hpp"
+#include "process.h"
 #include "render.h"
 #include "tools.h"
 #include <iostream>

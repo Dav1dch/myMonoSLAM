@@ -8,7 +8,6 @@
 #include <Eigen/Dense>
 #include <iostream>
 
-namespace fe_extract {
 class feature_extractor {
   public:
     cv::Mat last, descriptors_;
@@ -17,9 +16,7 @@ class feature_extractor {
     cv::Ptr<cv::ORB> detector;
     bool isInitialized;
     feature_extractor();
-    void extract(cv::Mat frame, frame_ *f);
+    void extract(cv::Mat image, Frame *f);
 };
-
-} // namespace fe_extract
 
 #endif

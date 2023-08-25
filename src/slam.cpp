@@ -6,7 +6,8 @@ int main(int argc, char **argv) {
     v->setup();
     auto co = v->run();
     v->co = &co;
-    frame::frame *f = new frame::frame();
+    PointMap *map = new PointMap();
+    process *p = new process(map);
     // VideoCapture cap(
     //     "/Users/david/Downloads/twitchslam/videos/test_countryroad.mp4");
     // VideoCapture cap("/Users/david/Codes/myMonoSLAM/test.mp4");
@@ -31,7 +32,7 @@ int main(int argc, char **argv) {
 
         // Display the resulting frame
 
-        f->process_frame_orb(frame, v);
+        p->process_frame_orb(frame, v);
 
         // Press  ESC on keyboard to exit
         char c = (char)waitKey(25);
@@ -40,11 +41,11 @@ int main(int argc, char **argv) {
     }
     v->final();
 
-    std::cout << f->posees.at(0).at(0) << std::endl;
+    std::cout << p->posees.at(0).at(0) << std::endl;
 
     // Open a file for writing
     ofstream outfile("output.txt");
-    std::vector<std::vector<float>> vec = f->posees;
+    std::vector<std::vector<float>> vec = p->posees;
 
     // Write the 2D vector to the file
     for (int i = 0; i < vec.size(); i++) {

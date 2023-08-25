@@ -1,5 +1,5 @@
-#ifndef FRAME_H
-#define FRAME_H
+#ifndef PROCESS_H
+#define PROCESS_H
 
 #include "extract.h"
 #include "global.h"
@@ -18,25 +18,23 @@
 
 #include <Eigen/src/Geometry/Quaternion.h>
 
-namespace frame {
-class frame {
+class process {
   public:
-    std::vector<frame_ *> frames;
-    std::vector<Point> points;
+    PointMap *map;
+
     bool isInitialized;
     std::vector<std::vector<float>> posees;
-    int idx;
+    int idx, width, height;
 
-    fe_extract::feature_extractor extractor;
-    fe_matcher::feature_matcher matcher;
+    feature_extractor extractor;
+    feature_matcher matcher;
     cv::Mat K;
 
     void process_frame_orb(cv::Mat frame, viewer *v);
     void process_frame_direct(cv::Mat frame);
-    void extractRt(frame_ *f1, frame_ *f2);
-    frame();
+    void extractRt(Frame *f1, Frame *f2);
+    process(PointMap *map);
 };
 
-} // namespace frame
-  //
+//
 #endif
