@@ -46,17 +46,17 @@ MyCoroutine viewer::run() {
         glBegin(GL_POINTS);
 
         for (auto rf : this->renderQueue) {
-            glColor3f(0.0, 255.0, 0.0);
-            glVertex3f(rf.f->t.at<float>(0), rf.f->t.at<float>(1),
-                       rf.f->t.at<float>(2));
-            glColor3f(255.0, 0.0, 0.0);
+            glColor3d(0.0, 255.0, 0.0);
+            glVertex3d(rf.f->t.at<double>(0), rf.f->t.at<double>(1),
+                       rf.f->t.at<double>(2));
+            glColor3d(255.0, 0.0, 0.0);
             for (auto pt : rf.points) {
                 // std::cout << pt.pose << std::endl;
-                // std::cout << pt.pose.at<float>(0) << " ," <<
-                // pt.pose.at<float>(1)
-                //           << " ," << pt.pose.at<float>(2) << std::endl;
-                glVertex3f(pt.pose.at<float>(0), pt.pose.at<float>(1),
-                           pt.pose.at<float>(2));
+                // std::cout << pt.pose.at<double>(0) << " ," <<
+                // pt.pose.at<double>(1)
+                //           << " ," << pt.pose.at<double>(2) << std::endl;
+                glVertex3d(pt.pose.at<double>(0), pt.pose.at<double>(1),
+                           pt.pose.at<double>(2));
             }
         }
         glEnd();
@@ -101,17 +101,17 @@ void viewer::final() {
         glBegin(GL_POINTS);
 
         for (auto rf : this->renderQueue) {
-            glColor3f(0.0, 255.0, 0.0);
-            glVertex3f(rf.f->t.at<float>(0), rf.f->t.at<float>(1),
-                       rf.f->t.at<float>(2));
-            glColor3f(255.0, 0.0, 0.0);
+            glColor3d(0.0, 255.0, 0.0);
+            glVertex3d(rf.f->t.at<double>(0), rf.f->t.at<double>(1),
+                       rf.f->t.at<double>(2));
+            glColor3d(255.0, 0.0, 0.0);
             for (auto pt : rf.points) {
                 // std::cout << pt.pose << std::endl;
-                // std::cout << pt.pose.at<float>(0) << " ," <<
-                // pt.pose.at<float>(1)
-                //           << " ," << pt.pose.at<float>(2) << std::endl;
-                glVertex3f(pt.pose.at<float>(0), pt.pose.at<float>(1),
-                           pt.pose.at<float>(2));
+                // std::cout << pt.pose.at<double>(0) << " ," <<
+                // pt.pose.at<double>(1)
+                //           << " ," << pt.pose.at<double>(2) << std::endl;
+                glVertex3d(pt.pose.at<double>(0), pt.pose.at<double>(1),
+                           pt.pose.at<double>(2));
             }
         }
         glEnd();

@@ -11,7 +11,7 @@
 class feature_extractor {
   public:
     cv::Mat last, descriptors_;
-    std::vector<cv::Point2f> corners_;
+    std::vector<cv::Point2d> corners_;
     std::vector<cv::KeyPoint> kps_;
     cv::Ptr<cv::ORB> detector;
     bool isInitialized;

@@ -15,8 +15,7 @@ class feature_matcher {
     std::vector<cv::DMatch> matches;
     feature_matcher();
     void match_frames(Frame *f1, Frame *f2);
-    float width, height, tresholdDist;
+    double width, height, tresholdDist;
 };
 
-cv::Mat pts_normalize(std::vector<cv::Point2f> pts);
 #endif

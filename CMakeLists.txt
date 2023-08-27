@@ -39,8 +39,15 @@ include_directories(${CERES_INCLUDE_DIRS})
 
 # g2o
 find_package(G2O REQUIRED)
+find_Package(CSparse REQUIRED)
 include_directories(${G2O_INCLUDE_DIRS})
 
+include_directories(/opt/anaconda3/pkgs/suitesparse-5.10.1-h7cd81ec_1/include)
+Find_Package(Ceres REQUIRED)
+
+include_directories( ${CSPARSE_INCLUDE_DIR})
+set(G2O_LIBS /usr/local/lib/libg2o_core.dylib /usr/local/lib/libg2o_stuff.dylib /usr/local/lib/libg2o_csparse_extension.dylib /usr/local/lib/libg2o_solver_csparse.dylib /usr/local/lib/libg2o_types_slam3d.dylib /usr/local/lib/libg2o_types_sim3.dylib /usr/local/lib/libg2o_types_sba.dylib)
+set(G2O_LIBS_2 /Users/david/Codes/myMonoSLAM/Thirdparty/g2o/lib/libg2o.dylib)
 
 
 #sophus
@@ -64,8 +71,8 @@ include_directories(${Sophus_INCLUDE_DIRS})
 
 
 add_executable(slam src/slam.cpp src/type.cpp src/extract.cpp src/process.cpp src/tools.cpp
-  src/match.cpp src/render.cpp)
-target_link_libraries(slam ${OpenCV_LIBS} ${Sophus_LIBRARIES} fmt::fmt ${Pangolin_LIBRARIES})
+  src/match.cpp src/render.cpp src/optimize.cpp)
+target_link_libraries(slam ${OpenCV_LIBS} ${Sophus_LIBRARIES} fmt::fmt ${Pangolin_LIBRARIES} ${CERES_LIBRARIES} ${G2O_LIBS})
 
 add_executable(test test/main.cpp src/tools.cpp src/type.cpp)
 target_link_libraries(test ${Pangolin_LIBRARIES} Threads::Threads ${OpenCV_LIBS})

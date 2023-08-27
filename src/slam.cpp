@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 
     // Open a file for writing
     ofstream outfile("output.txt");
-    std::vector<std::vector<float>> vec = p->posees;
+    std::vector<std::vector<double>> vec = p->posees;
 
     // Write the 2D vector to the file
     for (int i = 0; i < vec.size(); i++) {

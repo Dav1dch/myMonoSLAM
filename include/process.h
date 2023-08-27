@@ -6,6 +6,8 @@
 #include "match.h"
 #include "opencv2/core.hpp"
 #include "opencv2/core/eigen.hpp"
+#include "opencv2/flann.hpp"
+#include "optimize.h"
 #include "render.h"
 #include "sophus/se3.hpp"
 #include "sophus/so3.hpp"
@@ -14,16 +16,15 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/src/Core/Matrix.h>
-#include <iostream>
-
 #include <Eigen/src/Geometry/Quaternion.h>
+#include <iostream>
 
 class process {
   public:
     PointMap *map;
 
     bool isInitialized;
-    std::vector<std::vector<float>> posees;
+    std::vector<std::vector<double>> posees;
     int idx, width, height;
 
     feature_extractor extractor;
